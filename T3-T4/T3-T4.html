@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Revision T3-T4</title>
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
+
+  <style>
+    li { margin-top: 0.5em; }
+    body {
+      margin: 0;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background-color: #f0f0f0;
+      font-family: 'Roboto', sans-serif;
+    }
+
+    #loader {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(115, 237, 255, 0.5);
+      opacity: 1;
+      transition: opacity 1s ease-in-out;
+    }
+
+    .bar-container {
+      display: flex;
+      margin-bottom: 20px;
+    }
+
+    .bar {
+      width: 10px;
+      height: 50px;
+      margin: 0 5px;
+      background-color: #000078;
+      animation: wave 1.5s infinite;
+    }
+
+    .bar:nth-child(2) {
+      animation-delay: 0.3s;
+    }
+
+    .bar:nth-child(3) {
+      animation-delay: 0.6s;
+    }
+
+    @keyframes wave {
+      0%, 40%, 100% {
+        transform: scaleY(0.4);
+      }
+      20% {
+        transform: scaleY(1);
+      }
+    }
+
+    #loading-text {
+      font-size: 18px;
+      color: #000078;
+    }
+
+    .hidden {
+      opacity: 0 !important;
+      pointer-events: none;
+    }
+
+    form {
+      width: 100vh;
+      padding: 3%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .divForm {
+      margin: 10px;
+    }
+
+    #pageNumber {
+      margin-right: 5px;
+    }
+
+    #sendForm {
+      color: #fff;
+      background-color: #001f4d;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.3s;
+    }
+
+    #sendForm:hover {
+      /* Efecto 3D */
+      background-color: #003366;
+      transform: translateY(-2px);
+    }
+	#selectContainer {
+      width: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 10px;
+      background-color: #ddd; /* Color de fondo de ejemplo */
+    }
+  </style>
+</head>
+<body>
+  <div id="loader" class="hidden" data-testid="loader">
+    <div class="bar-container">
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+    </div>
+    <div id="loading-text" data-testid="loading-text"></div>
+  </div>
+  <form name="form" id="myContent" action="" data-testid="myContent">
+    <div class="divForm">
+      <label for="pageNumber">Page number of people:</label>
+      <input id="pageNumber" type="number" />
+    </div>
+	<div id="selectContainer" data-testid="selectContainer"></div>>
+      Place your SELECT here
+    </div>
+    <div class="divForm">
+      <button id="sendForm" type="submit"  data-testid="sendForm">SEND FORM!</button>
+    </div>
+  </form>
+<script src="./T3-T4.js"></script>
+</body>
+</html>
+
