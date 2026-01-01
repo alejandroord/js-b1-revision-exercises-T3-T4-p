@@ -18,28 +18,28 @@ Se nos pide trabajar sobre este fichero T3-T4.js (que se carga mediante un scrip
   
     2.1- Antes de realizar la llamada: Esta función recibirá un número de página por parámetro y realizará una llamada fetch a la API de SWAPI para obtener un listado de los personajes de StarWars que aparecen en esa pagina. 
     Aún así, antes de esta llamada, la función debe realizar las siguientes acciones:
-	    2.1.1- Ocultar el formulario (un form cuya id es "myContent"), esto lo haremos añadiendo la clase "hidden" que ya nos viene definida en el css. De manera que este elemento no se mostrará mientras 
-		ejecutamos la función y no hayamos obtenido resultados aún.
+        2.1.1- Ocultar el formulario (un form cuya id es "myContent"), esto lo haremos añadiendo la clase "hidden" que ya nos viene definida en el css. De manera que este elemento no se mostrará mientras 
+        ejecutamos la función y no hayamos obtenido resultados aún.
 
-	    2.1.2.- Mostrar el cargador (un div cuya id es "loader") esto lo haremos eliminando la clase "hidden", de manera que el cargador se muestre mientras ejecutamos la función y no hayamos obtenido resultados aún. 
-		Así el usuario podrá apreciar por pantalla que se está llamando a la API.
+        2.1.2.- Mostrar el cargador (un div cuya id es "loader") esto lo haremos eliminando la clase "hidden", de manera que el cargador se muestre mientras ejecutamos la función y no hayamos obtenido resultados aún. 
+        Así el usuario podrá apreciar por pantalla que se está llamando a la API.
 
-	    2.1.3.- Modificar el textContent del div que está contenido dentro del div "loader" y cuya clase es "loading-text" para que ponga estrictamente "loading..."
+        2.1.3.- Modificar el textContent del div que está contenido dentro del div "loader" y cuya clase es "loading-text" para que ponga estrictamente "loading..."
   
     2.2.- A continuación, realizaremos una llamada fetch a la siguiente URL: https://swapi.dev/api/people/?page=[page_number] donde [page_number] es el parámetro que indica el número de página que queremos consultar. 
     Luego, recogeremos la respuesta de la llamada fetch utilizando un bloque then(), en donde, una vez obtenida la respuesta haremos esta serie de acciones:
-	    2.2.1.- Almacenaremos la respuesta en una posición del localhost denominada "swapi_[page_number]" donde [page_number] es el parámetro que indica el número de página que queremos consultar ("swapi_1", "swapi_2", ...)
+        2.2.1.- Almacenaremos la respuesta en una posición del localhost denominada "swapi_[page_number]" donde [page_number] es el parámetro que indica el número de página que queremos consultar ("swapi_1", "swapi_2", ...)
 
-	    2.2.2.- Convertiremos la respuesta a formato JSON (utilizando el método response.json()) en una constante definida dentro de la función cuyo nombre podéis elegir libremente.
+        2.2.2.- Convertiremos la respuesta a formato JSON (utilizando el método response.json()) en una constante definida dentro de la función cuyo nombre podéis elegir libremente.
 
-	    2.2.3.- Recorreremos el Array de resultados que se encuentra en la propiedad "results" del objeto obtenido tras la llamada (y que habéis almacenado anteriormente en una constante) y crearemos un nuevo objeto del DOM, 
-		en este caso un SELECT, cuyas OPTIONS estarán conformadas por el valor de la propiedad "name" de cada personaje en el TEXT y en el VALUE del OPTION le asignaremos la propiedad "url" de cada personaje.
+        2.2.3.- Recorreremos el Array de resultados que se encuentra en la propiedad "results" del objeto obtenido tras la llamada (y que habéis almacenado anteriormente en una constante) y crearemos un nuevo objeto del DOM, 
+        en este caso un SELECT, cuyas OPTIONS estarán conformadas por el valor de la propiedad "name" de cada personaje en el TEXT y en el VALUE del OPTION le asignaremos la propiedad "url" de cada personaje.
 
-	    2.2.4.- Ocultar el cargador (el div cuya id es "loader") esto lo haremos añadiendo la clase "hidden".
+        2.2.4.- Ocultar el cargador (el div cuya id es "loader") esto lo haremos añadiendo la clase "hidden".
 
-	    2.2.5.- Mostrar el formulario (el form cuya id es "myContent"), esto lo haremos eliminándole la clase "hidden".
+        2.2.5.- Mostrar el formulario (el form cuya id es "myContent"), esto lo haremos eliminándole la clase "hidden".
 
-	    2.2.6.- Añadir eventos al SELECT del formulario creado de modo que, al cambiar, modifique el ACTION del formulario con el VALUE que tiene almacendo el OPTION seleccionado (usar dispatchEvent). 
+        2.2.6.- Añadir eventos al SELECT del formulario creado de modo que, al cambiar, modifique el ACTION del formulario con el VALUE que tiene almacendo el OPTION seleccionado (usar dispatchEvent). 
 
  * 3.- Crear una función (a la que denominaremos modifySendFormButton) que emplee addEventListener para que, cuando se clique en el botón cuya id es "sendForm" (y que es el que en principio envíaría el formulario), no se realice la acción 
   de enviar el formulario y en su lugar, se abra una ventana nueva con la URL definida en el ACTION del formulario, recordad que el SELECT que hemos creado contralará este ACTION al cambiar.
@@ -91,22 +91,87 @@ i l'ús de blocs then() a JavaScript:
   */
 
 //1 modifyPageNumberInput
-    function modifyPageNumberInput(){
-        //Put your code here
-    }
+function modifyPageNumberInput() {
+    const pageInput = document.getElementById("pageNumber");
 
-    //2 fetchSWAPIPeople
-    function fetchSWAPIPeople(pageNumber) {
-        //Put your code here
-    }
+    pageInput.addEventListener("change", function () {
+        fetchSWAPIPeople(pageInput.value);
 
-    // 3 modifySendFormButton
-    function modifySendFormButton(){
-        //Put your code here
-    }
+    });
+}
+
+//2 fetchSWAPIPeople
+function fetchSWAPIPeople(pageNumber) {
+
+
+    const url = `https://swapi.dev/api/people/?page=${pageNumber}`;
+    const myContent = document.getElementById("myContent");
+    const loader = document.getElementById("loader");
+    const loadingText = document.getElementById("loading-text");
+
+    myContent.classList.add("hidden");
+    loader.classList.remove("hidden");
+    loadingText.textContent = "loading...";
+
+
+    return fetch(url)
+        .then(response => {
+            return response.json();
+        })
+        .then(data => {
+            const personajesJSON = data;
+            localStorage.setItem(`swapi_${pageNumber}`, JSON.stringify(data))
+
+            const container = document.getElementById("myContent");
+            container.innerHTML = "";
+
+            const select = document.createElement("select");
+            select.id = "personajeSelect";
+
+            personajesJSON.results.forEach(personaje => {
+                const option = document.createElement("option");
+                option.textContent = personaje.name;
+                option.value = personaje.url;
+                select.appendChild(option);
+            })
+
+            container.appendChild(select);
+
+            loader.classList.add("hidden");
+            container.classList.remove("hidden");
+
+            select.addEventListener("change", () => {
+                const form = document.getElementById("myContent");
+                form.action = select.value;
+
+                const event = new Event("change");
+                form.dispatchEvent(event);
+            })
+
+            return data;
+        })
+        .catch(error => {
+            console.error("Error al obtener datos");
+        })
+
+}
+
+
+// 3 modifySendFormButton
+function modifySendFormButton() {
+    const sendBtn = document.getElementById("sendForm");
+    sendBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        const form = document.getElementById("myContent");
+        const url = form.action;
+        if (url) {
+            window.open(url, "_blank");
+        }
+    });
+}
 /**
  *  Do not modify this DOMContentLoaded script
-*/ 
+*/
 document.addEventListener('DOMContentLoaded', function () {
     modifyPageNumberInput();
     modifySendFormButton();
